@@ -11,6 +11,7 @@ import {
 import { QUERY_PRODUCTS } from "../utils/queries";
 import spinner from '../assets/spinner.gif'
 import Cart from '../components/Cart';
+import { idbPromise } from '../utils/helpers';
 
 function Detail() {
   const [state, dispatch] = useStoreContext();
@@ -47,15 +48,29 @@ function Detail() {
   }
 
   useEffect(() => {
+    // already in global store
     if (products.length) {
       setCurrentProduct(products.find(product => product._id === id));
+    // Retrieved from server
     } else if (data) {
       dispatch({
         type: UPDATE_PRODUCTS,
         products: data.products
       });
+
+      data.products.forEach(product => {
+        idbPromise('products', 'put', product);
+      });
+    // Get cache from idb
+    } else if (!loading) {
+      idbPromise('products', 'get').then((indexedProducts) => {
+        dispatch({
+          type: UPDATE_PRODUCTS,
+          products: indexedProducts
+        });
+      });
     }
-  }, [products, data, dispatch, id]);
+  }, [products, data, loading, dispatch, id]);
 
   return (
     <>
