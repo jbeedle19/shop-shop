@@ -22,7 +22,7 @@ function Success() {
             }
 
             setTimeout(function(){
-                window.location.assign("http://localhost:3000/")
+                window.location.assign("/")
             }, 3000);
         }
 
