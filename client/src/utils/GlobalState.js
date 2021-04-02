@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+/* import React, { createContext, useContext } from 'react';
 import { useProductReducer } from './reducers';
 
 const StoreContext = createContext();
@@ -21,4 +21,4 @@ const useStoreContext = () => {
     return useContext(StoreContext);
 };
 
-export { StoreProvider, useStoreContext };
+export { StoreProvider, useStoreContext }; */
