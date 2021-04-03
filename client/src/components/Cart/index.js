@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import store from '../../utils/store';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { TOGGLE_CART, ADD_MULTIPLE_TO_CART } from '../../utils/actions';
 import { idbPromise } from '../../utils/helpers';
 import CartItem from '../CartItem';
@@ -15,6 +15,8 @@ const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 const Cart = () => {
     const state = store.getState();
     const dispatch = useDispatch();
+    const cartToggleState = useSelector(state => state.cartOpen);
+    const cartItems = useSelector(state => state.cart);
 
     const [getCheckout, { data }] = useLazyQuery(QUERY_CHECKOUT);
 
@@ -24,10 +26,10 @@ const Cart = () => {
             dispatch({ type: ADD_MULTIPLE_TO_CART, products: [...cart] });
         };
 
-        if (!state.cart.length) {
+        if (!cartItems.length) {
             getCart();
         }
-    }, [state.cart.length, dispatch]);
+    }, [cartItems.length, dispatch]);
 
     useEffect(() => {
         if (data) {
@@ -43,7 +45,7 @@ const Cart = () => {
 
     function calculateTotal() {
         let sum = 0;
-        state.cart.forEach(item => {
+        cartItems.forEach(item => {
             sum += item.price * item.purchaseQuantity;
         });
         return sum.toFixed(2);
@@ -52,7 +54,7 @@ const Cart = () => {
     function submitCheckout() {
         const productIds = [];
 
-        state.cart.forEach((item) => {
+        cartItems.forEach((item) => {
             for (let i = 0; i < item.purchaseQuantity; i++) {
                 productIds.push(item._id);
             }
@@ -63,7 +65,7 @@ const Cart = () => {
         });
     }
 
-    if (!state.cartOpen) {
+    if (!cartToggleState) {
         return (
             <div className="cart-closed" onClick={toggleCart}>
                 <span
@@ -77,9 +79,9 @@ const Cart = () => {
         <div className="cart">
             <div className="close" onClick={toggleCart}>[close]</div>
             <h2>Shopping Cart</h2>
-            {state.cart.length ? (
+            {cartItems.length ? (
                 <div>
-                    {state.cart.map(item => (
+                    {cartItems.map(item => (
                         <CartItem key={item._id} item={item} />
                     ))}
                     <div className="flex-row space-between">

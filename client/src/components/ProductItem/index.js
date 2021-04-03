@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { pluralize } from "../../utils/helpers";
 import store from "../../utils/store";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ADD_TO_CART, UPDATE_CART_QUANTITY } from "../../utils/actions";
 import { idbPromise } from "../../utils/helpers";
 
@@ -17,12 +17,12 @@ function ProductItem(item) {
 
   const state = store.getState();
   const dispatch = useDispatch();
+  const cartItems = useSelector(state => state.cart);
 
-  const { cart } = state;
 
   const addToCart = () => {
     // Find the cart item with the matching id
-    const itemInCart = cart.find((cartItem) => cartItem._id === _id);
+    const itemInCart = cartItems.find((cartItem) => cartItem._id === _id);
 
     // If there was a match, call UPDATE with a new purchase quantity
     if (itemInCart) {
