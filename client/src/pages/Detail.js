@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from '@apollo/react-hooks';
 import store from "../utils/store";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   REMOVE_FROM_CART,
   UPDATE_CART_QUANTITY,
@@ -17,16 +17,16 @@ import { idbPromise } from '../utils/helpers';
 function Detail() {
   const state = store.getState();
   const dispatch = useDispatch();
+  const cartItem = useSelector(state => state.cart);
+  const productsState = useSelector(state => state.products);
   const { id } = useParams();
 
   const [currentProduct, setCurrentProduct] = useState({})
 
   const { loading, data } = useQuery(QUERY_PRODUCTS);
 
-  const { products, cart } = state;
-
   const addToCart = () => {
-    const itemInCart = cart.find((cartItem) => cartItem._id === id);
+    const itemInCart = cartItem.find((cartItem) => cartItem._id === id);
 
     if (itemInCart) {
       dispatch({
@@ -61,8 +61,8 @@ function Detail() {
 
   useEffect(() => {
     // already in global store
-    if (products.length) {
-      setCurrentProduct(products.find(product => product._id === id));
+    if (productsState.length) {
+      setCurrentProduct(productsState.find(product => product._id === id));
     // Retrieved from server
     } else if (data) {
       dispatch({
@@ -82,7 +82,7 @@ function Detail() {
         });
       });
     }
-  }, [products, data, loading, dispatch, id]);
+  }, [productsState, data, loading, dispatch, id]);
 
   return (
     <>
@@ -106,7 +106,7 @@ function Detail() {
               Add to Cart
             </button>
             <button
-              disabled={!cart.find(p => p._id === currentProduct._id)}
+              disabled={!cartItem.find(p => p._id === currentProduct._id)}
               onClick={removeFromCart}
             >
               Remove from Cart
