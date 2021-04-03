@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useQuery } from '@apollo/react-hooks';
-import store from "../../utils/store";
 import { useDispatch, useSelector } from 'react-redux';
 import { UPDATE_PRODUCTS } from '../../utils/actions';
 import ProductItem from "../ProductItem";
@@ -9,7 +8,6 @@ import spinner from "../../assets/spinner.gif";
 import { idbPromise } from '../../utils/helpers';
 
 function ProductList() {
-  const state = store.getState();
   const dispatch = useDispatch();
   const currentCategoryState = useSelector(state => state.currentCategory);
   const productsState = useSelector(state => state.products);

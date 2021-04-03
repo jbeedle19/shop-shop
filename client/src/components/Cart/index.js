@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import store from '../../utils/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { TOGGLE_CART, ADD_MULTIPLE_TO_CART } from '../../utils/actions';
 import { idbPromise } from '../../utils/helpers';
@@ -13,7 +12,6 @@ import { useLazyQuery } from '@apollo/react-hooks';
 const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 
 const Cart = () => {
-    const state = store.getState();
     const dispatch = useDispatch();
     const cartToggleState = useSelector(state => state.cartOpen);
     const cartItems = useSelector(state => state.cart);

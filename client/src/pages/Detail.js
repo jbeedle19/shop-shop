@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from '@apollo/react-hooks';
-import store from "../utils/store";
 import { useDispatch, useSelector } from 'react-redux';
 import {
   REMOVE_FROM_CART,
@@ -15,7 +14,6 @@ import Cart from '../components/Cart';
 import { idbPromise } from '../utils/helpers';
 
 function Detail() {
-  const state = store.getState();
   const dispatch = useDispatch();
   const cartItem = useSelector(state => state.cart);
   const productsState = useSelector(state => state.products);
