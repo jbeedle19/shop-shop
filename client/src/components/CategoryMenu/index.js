@@ -4,13 +4,12 @@ import { QUERY_CATEGORIES } from "../../utils/queries";
 import { UPDATE_CATEGORIES, UPDATE_CURRENT_CATEGORY } from "../../utils/actions";
 import { idbPromise } from "../../utils/helpers";
 import store from "../../utils/store";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 function CategoryMenu() {
   const state = store.getState();
   const dispatch = useDispatch();
-
-  const { categories } = state;
+  const categoriesState = useSelector(state => state.categories);
 
   const { loading, data: categoryData } = useQuery(QUERY_CATEGORIES);
 
@@ -45,7 +44,7 @@ function CategoryMenu() {
   return (
     <div>
       <h2>Choose a Category:</h2>
-      {categories.map(item => (
+      {categoriesState.map(item => (
         <button
           key={item._id}
           onClick={() => {
